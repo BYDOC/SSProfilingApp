@@ -71,7 +71,6 @@ public class JaroWinklerApiClient : ISimilarityCalculator
                 .GetProperty("details")[0]
                 .GetString();
 
-            // Extract number from string like "similarity is 0.855"
             if (detailsText != null && detailsText.Contains("similarity is "))
             {
                 var numberText = detailsText.Replace("similarity is ", "").Trim();

@@ -1,14 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SSProfilingApp.Application.Enums;
 using SSProfilingApp.Application.Interfaces;
 using SSProfilingApp.Application.Requests;
 using SSProfilingApp.Domain.Entities;
 using SSProfilingApp.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SSProfilingApp.Infrastructure.Services
 {

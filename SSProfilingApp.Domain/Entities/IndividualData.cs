@@ -2,7 +2,7 @@
 
 public class IndividualData
 {
-    public int Id { get; set; }  // Primary Key
+    public int Id { get; set; }
 
     public string? FirstName { get; set; }   
     public string? MiddleName { get; set; } 

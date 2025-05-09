@@ -34,7 +34,6 @@ app.MapGet("/ping-db", async (AppDbContext db) =>
 {
     try
     {
-        // Try to count the individuals table to force a DB call
         var count = await db.Individuals.CountAsync();
         return Results.Ok($"DB connection successful. Individuals count: {count}");
     }

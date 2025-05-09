@@ -17,7 +17,6 @@ namespace SSProfilingApp.Infrastructure.Services
         }
         public async Task<double> CalculateScoreAsync(IndividualData a, IndividualData b)
         {
-            // Rule 1: IdentityNumber match → direct similarity 1
             if (!string.IsNullOrWhiteSpace(a.IdentityNumber) &&
                 a.IdentityNumber == b.IdentityNumber)
             {
