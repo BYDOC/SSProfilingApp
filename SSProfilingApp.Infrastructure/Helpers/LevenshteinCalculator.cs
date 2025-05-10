@@ -6,6 +6,9 @@ public class LevenshteinCalculator : ISimilarityCalculator
 {
     public Task<double> CalculateAsync(string s1, string s2)
     {
+        if (string.IsNullOrWhiteSpace(s1) || string.IsNullOrWhiteSpace(s2))
+            return Task.FromResult(0.0);
+
         int[,] dp = new int[s1.Length + 1, s2.Length + 1];
 
         for (int i = 0; i <= s1.Length; i++)

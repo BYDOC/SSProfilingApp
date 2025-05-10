@@ -38,7 +38,7 @@ namespace SSProfilingApp.Infrastructure.Services
             return newIndividual.Id;
         }
 
-        public async Task GroupIndividualsAsync()
+        public async Task GroupIndividualsAsyncx()
         {
             var ungrouped = await _db.Individuals
                 .Where(i => !_db.DataProfiles.Any(p => p.IndividualDataId == i.Id))
@@ -80,6 +80,47 @@ namespace SSProfilingApp.Infrastructure.Services
             await _db.SaveChangesAsync();
         }
 
+        public async Task GroupIndividualsAsync()
+        {
+            _db.DataProfiles.RemoveRange(_db.DataProfiles);
+            await _db.SaveChangesAsync();
+
+            var individuals = await _db.Individuals.ToListAsync();
+            var grouped = new List<(IndividualData individual, int profileId)>();
+            int nextProfileId = 1;
+
+            foreach (var current in individuals)
+            {
+                int? matchedProfileId = null;
+
+                foreach (var (existing, profileId) in grouped)
+                {
+                    double score = await _scoreService.CalculateScoreAsync(current, existing);
+                    if (score >= 0.85)
+                    {
+                        matchedProfileId = profileId;
+                        break;
+                    }
+                }
+
+                if (matchedProfileId == null)
+                {
+                    matchedProfileId = nextProfileId++;
+                }
+
+                _db.DataProfiles.Add(new DataProfile
+                {
+                    ProfileId = matchedProfileId.Value,
+                    IndividualDataId = current.Id
+                });
+
+                grouped.Add((current, matchedProfileId.Value));
+            }
+
+            await _db.SaveChangesAsync();
+        }
+
+
         private async Task<int> GetNextProfileIdAsync()
         {
             return (await _db.DataProfiles.MaxAsync(p => (int?)p.ProfileId) ?? 0) + 1;
@@ -92,7 +133,10 @@ namespace SSProfilingApp.Infrastructure.Services
 
             var individuals = await _db.Individuals.ToListAsync();
             _db.Individuals.RemoveRange(individuals);
-
+#if DEBUG
+            await _db.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT ('dbo.Individuals', RESEED, 0)");
+            await _db.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT ('dbo.DataProfiles', RESEED, 0)");
+#endif
             await _db.SaveChangesAsync();
         }
     }

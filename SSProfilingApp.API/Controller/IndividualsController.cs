@@ -18,7 +18,7 @@ public class IndividualsController : ControllerBase
     public async Task<IActionResult> Create([FromBody] CreateIndividualRequest request)
     {
         var id = await _profilingService.AddIndividualAsync(request);
-        return Ok();
+        return Ok(id);
     }
 
     [HttpGet("with-profiles")]

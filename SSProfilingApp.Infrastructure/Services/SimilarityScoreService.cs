@@ -23,14 +23,14 @@ namespace SSProfilingApp.Infrastructure.Services
                 return 1.0;
             }
 
-            var calc = _calculatorFactory.Get(Application.Enums.SimilarityAlgorithm.JaroWinkler); //or Levenshtein
+            var calc = _calculatorFactory.Get(Application.Enums.SimilarityAlgorithm.Levenshtein); //Jaro-Winkler 
 
             var nameA = $"{a.FirstName}{a.MiddleName}{a.LastName}";
             var nameB = $"{b.FirstName}{b.MiddleName}{b.LastName}";
             var scoreName = await calc.CalculateAsync(nameA, nameB);
 
             var scorePlace = await calc.CalculateAsync(a.BirthPlace, b.BirthPlace);
-            var scoreDate = await calc.CalculateAsync(a.BirthDate, b.BirthDate);
+            var scoreDate = CalculateBirthDateScore(a.BirthDate, b.BirthDate);
             var scoreNationality = a.Nationality == b.Nationality ? 1.0 : 0.0;
 
             var weighted =
@@ -40,6 +40,15 @@ namespace SSProfilingApp.Infrastructure.Services
                 (scoreNationality * 0.15);
 
             return weighted;
+        }
+
+        private double CalculateBirthDateScore(DateTime? a, DateTime? b)
+        {
+            if (!a.HasValue || !b.HasValue)
+                return 0.0;
+
+            var diffDays = Math.Abs((a.Value - b.Value).TotalDays);
+            return diffDays <= 2 ? 1.0 : 0.0;
         }
     }
 }
