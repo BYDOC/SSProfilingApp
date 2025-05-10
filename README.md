@@ -79,3 +79,19 @@ http://localhost:<port>/swagger
 The Jaro-Winkler similarity is calculated via `https://api.tilotech.io`.  
 You can configure the base URL in `appsettings.json`.
 
+
+---
+## 🔄 Switching Similarity Algorithm
+
+To change the similarity calculation from **Levenshtein** to **Jaro-Winkler**, simply modify this line in `SimilarityScoreService`:
+
+```csharp
+var calc = _calculatorFactory.Get(Application.Enums.SimilarityAlgorithm.Levenshtein);
+```
+
+Change it to:
+
+```csharp
+var calc = _calculatorFactory.Get(Application.Enums.SimilarityAlgorithm.JaroWinkler);
+```
+No other changes are needed — the system will use the configured implementation.

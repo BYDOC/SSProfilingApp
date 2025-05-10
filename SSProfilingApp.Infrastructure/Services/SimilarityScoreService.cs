@@ -23,7 +23,7 @@ namespace SSProfilingApp.Infrastructure.Services
                 return 1.0;
             }
 
-            var calc = _calculatorFactory.Get(Application.Enums.SimilarityAlgorithm.Levenshtein); //Jaro-Winkler 
+            var calc = _calculatorFactory.Get(Application.Enums.SimilarityAlgorithm.Levenshtein); //or Jaro-Winkler 
 
             var nameA = $"{a.FirstName}{a.MiddleName}{a.LastName}";
             var nameB = $"{b.FirstName}{b.MiddleName}{b.LastName}";

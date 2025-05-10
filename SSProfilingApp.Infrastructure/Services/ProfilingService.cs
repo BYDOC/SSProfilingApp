@@ -39,48 +39,6 @@ namespace SSProfilingApp.Infrastructure.Services
             return individuals.Select(i => i.Id).ToList();
         }
 
-        public async Task GroupIndividualsAsyncx()
-        {
-            var ungrouped = await _db.Individuals
-                .Where(i => !_db.DataProfiles.Any(p => p.IndividualDataId == i.Id))
-                .ToListAsync();
-
-            var grouped = await _db.Individuals
-                .Where(i => _db.DataProfiles.Any(p => p.IndividualDataId == i.Id))
-                .ToListAsync();
-
-            foreach (var newIndividual in ungrouped)
-            {
-                int? matchedProfileId = null;
-
-                foreach (var existing in grouped)
-                {
-                    double score = await _scoreService.CalculateScoreAsync(newIndividual, existing);
-                    if (score >= 0.85)
-                    {
-                        matchedProfileId = await _db.DataProfiles
-                            .Where(p => p.IndividualDataId == existing.Id)
-                            .Select(p => (int?)p.ProfileId)
-                            .FirstOrDefaultAsync();
-                        break;
-                    }
-                }
-
-                if (matchedProfileId == null)
-                {
-                    matchedProfileId = await GetNextProfileIdAsync();
-                }
-
-                _db.DataProfiles.Add(new DataProfile
-                {
-                    ProfileId = matchedProfileId.Value,
-                    IndividualDataId = newIndividual.Id
-                });
-            }
-
-            await _db.SaveChangesAsync();
-        }
-
         public async Task GroupIndividualsAsync()
         {
             _db.DataProfiles.RemoveRange(_db.DataProfiles);
@@ -120,7 +78,6 @@ namespace SSProfilingApp.Infrastructure.Services
 
             await _db.SaveChangesAsync();
         }
-
 
         private async Task<int> GetNextProfileIdAsync()
         {
