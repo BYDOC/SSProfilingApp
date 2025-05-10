@@ -19,15 +19,6 @@ SSProfilingApp is a .NET 8 Web API developed as a case study to group individual
 - Swashbuckle for Swagger UI
 - HttpClient for third-party API integration
 
-## Project Structure
-
-SSProfilingApp/
-  ├── SSProfilingApp.Domain         - Entity models
-  ├── SSProfilingApp.Application    - Interfaces and DTOs
-  ├── SSProfilingApp.Infrastructure - DbContext, implementations, similarity logic
-  ├── SSProfilingApp.API            - Controllers and configuration
-  └── README.md
-
 ## Getting Started
 
 1. Clone the repository:
