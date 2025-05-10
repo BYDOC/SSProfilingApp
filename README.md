@@ -77,3 +77,7 @@ var calc = _calculatorFactory.Get(Application.Enums.SimilarityAlgorithm.JaroWink
 ```
 
 No other changes are needed.
+
+
+## Note on Levenshtein Implementation
+The Levenshtein algorithm used in this project was adapted from publicly available sources online
