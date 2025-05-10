@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Mvc;
 using SSProfilingApp.Application.Interfaces;
 using SSProfilingApp.Application.Requests;
 
@@ -15,8 +16,11 @@ public class IndividualsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateIndividualRequest request)
+    public async Task<IActionResult> Create([FromBody] List<CreateIndividualRequest> request)
     {
+        if (request == null || request.Count == 0)
+            return BadRequest("At least one individual must be provided.");
+
         var id = await _profilingService.AddIndividualAsync(request);
         return Ok(id);
     }

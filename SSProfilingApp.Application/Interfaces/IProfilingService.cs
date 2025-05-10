@@ -3,7 +3,7 @@
 namespace SSProfilingApp.Application.Interfaces;
 public interface IProfilingService
 {
-    Task<int> AddIndividualAsync(CreateIndividualRequest request);
+    Task<List<int>> AddIndividualAsync(List<CreateIndividualRequest>request);
     Task GroupIndividualsAsync();
     Task DeleteAllAsync();
 }

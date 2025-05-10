@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure.Core;
+using Microsoft.EntityFrameworkCore;
 using SSProfilingApp.Application.Interfaces;
 using SSProfilingApp.Application.Requests;
 using SSProfilingApp.Domain.Entities;
@@ -19,9 +20,9 @@ namespace SSProfilingApp.Infrastructure.Services
             _scoreService = scoreService;
         }
 
-        public async Task<int> AddIndividualAsync(CreateIndividualRequest request)
+        public async Task<List<int>> AddIndividualAsync(List<CreateIndividualRequest> request)
         {
-            var newIndividual = new IndividualData
+            var individuals = request.Select(request => new IndividualData
             {
                 FirstName = request.FirstName,
                 MiddleName = request.MiddleName,
@@ -30,12 +31,12 @@ namespace SSProfilingApp.Infrastructure.Services
                 BirthDate = request.BirthDate,
                 Nationality = request.Nationality,
                 IdentityNumber = request.IdentityNumber
-            };
+            }).ToList();
 
-            _db.Individuals.Add(newIndividual);
+            _db.Individuals.AddRange(individuals);
             await _db.SaveChangesAsync();
 
-            return newIndividual.Id;
+            return individuals.Select(i => i.Id).ToList();
         }
 
         public async Task GroupIndividualsAsyncx()
